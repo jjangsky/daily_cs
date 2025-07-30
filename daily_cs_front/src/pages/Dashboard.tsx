@@ -54,118 +54,150 @@ export const Dashboard: React.FC = () => {
   return (
     <MobileLayout title="대시보드">
       <div className="mobile-container py-6 space-y-6">
-        {/* 사용자 정보 */}
-        <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-xl p-6 text-white">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-xl font-bold">안녕하세요, {user?.username}님! 🎯</h2>
-              <p className="text-primary-100 mt-1">오늘도 함께 성장해요</p>
-            </div>
-            <div className="text-right">
-              <div className="text-2xl font-bold">🔥 {streak}</div>
-              <div className="text-sm text-primary-100">연속 학습</div>
-            </div>
-          </div>
+        {/* Welcome Header with Modern Gradient */}
+        <div className="card-gradient relative overflow-hidden">
+          {/* Background decoration */}
+          <div className="absolute -top-12 -right-12 w-32 h-32 bg-primary-300/20 rounded-full blur-3xl" />
+          <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-accent-300/20 rounded-full blur-2xl" />
           
-          <div className="bg-white/10 rounded-lg p-4">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm">Lv. {user?.level}</span>
-              <span className="text-sm">{user?.experience}/3000 XP</span>
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">안녕하세요, {user?.username}님!</h2>
+                <p className="text-gray-600 mt-1">오늘도 한 걸음 더 성장해요</p>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-accent-600 flex items-center gap-1">
+                  <span className="text-2xl">🔥</span> {streak}
+                </div>
+                <div className="text-sm text-gray-600">연속 학습</div>
+              </div>
             </div>
-            <div className="w-full bg-white/20 rounded-full h-2">
-              <div
-                className="bg-white rounded-full h-2 transition-all duration-500"
-                style={{ width: `${((user?.experience || 0) / 3000) * 100}%` }}
-              />
+            
+            {/* Level Progress */}
+            <div className="bg-white/60 backdrop-blur rounded-2xl p-4">
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-sm font-medium text-gray-700">레벨 {user?.level}</span>
+                <span className="text-sm text-gray-600">{user?.experience % 1000}/1000 XP</span>
+              </div>
+              <div className="progress-bar">
+                <div
+                  className="progress-fill"
+                  style={{ width: `${((user?.experience || 0) % 1000) / 10}%` }}
+                />
+              </div>
             </div>
           </div>
         </div>
 
-        {/* 오늘의 문제 */}
-        <div className="card">
+        {/* Today's Challenge Card */}
+        <div className="card hover:shadow-xl">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold">오늘의 문제</h3>
-            <span className={`text-sm font-medium ${difficultyColor[todayChallenge?.difficulty || 'MEDIUM']}`}>
-              ⭐ {difficultyKorean[todayChallenge?.difficulty || 'MEDIUM']}
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">💡</span>
+              <h3 className="text-lg font-bold text-gray-900">오늘의 도전</h3>
+            </div>
+            <span className={`badge ${
+              todayChallenge?.difficulty === 'EASY' ? 'badge-success' :
+              todayChallenge?.difficulty === 'HARD' ? 'bg-red-100 text-red-700' :
+              'badge-accent'
+            }`}>
+              {difficultyKorean[todayChallenge?.difficulty || 'MEDIUM']}
             </span>
           </div>
           
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="badge badge-primary">
                 {categoryKorean[todayChallenge?.category || 'DATA_STRUCTURES']}
               </span>
-              <span className="text-xs text-gray-500">
+              <span className="text-sm text-gray-500">
                 {new Date().toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' })}
               </span>
             </div>
             
-            <h4 className="font-medium text-gray-900">
-              {todayChallenge?.title}
-            </h4>
+            <div>
+              <h4 className="font-semibold text-lg text-gray-900 mb-2">
+                {todayChallenge?.title}
+              </h4>
+              
+              <p className="text-gray-600 line-clamp-3">
+                {todayChallenge?.description}
+              </p>
+            </div>
             
-            <p className="text-sm text-gray-600 line-clamp-2">
-              {todayChallenge?.description}
-            </p>
-            
-            <Link to="/challenge" className="btn-primary w-full text-center">
-              답변하기
+            <Link to="/challenge" className="btn-accent w-full text-center">
+              도전하기 →
             </Link>
           </div>
         </div>
 
-        {/* 학습 통계 */}
-        <div className="card">
-          <h3 className="text-lg font-bold mb-4">학습 통계</h3>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary-600">45</div>
-              <div className="text-sm text-gray-600">총 문제</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary-600">82.5</div>
-              <div className="text-sm text-gray-600">평균 점수</div>
-            </div>
+        {/* Learning Statistics */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="card text-center">
+            <span className="text-3xl mb-2">📊</span>
+            <div className="text-3xl font-bold text-primary-600">45</div>
+            <div className="text-sm text-gray-600">완료한 문제</div>
           </div>
-
-          {/* 최근 점수 그래프 */}
-          <div className="mt-4">
-            <div className="flex items-end justify-between h-20 gap-1">
-              {recentScores.map((score, index) => (
-                <div
-                  key={index}
-                  className="flex-1 bg-primary-200 rounded-t"
-                  style={{ height: `${(score / 100) * 100}%` }}
-                />
-              ))}
-            </div>
-            <div className="text-xs text-gray-500 text-center mt-2">최근 5개 문제</div>
+          <div className="card text-center">
+            <span className="text-3xl mb-2">⭐</span>
+            <div className="text-3xl font-bold text-primary-600">82.5</div>
+            <div className="text-sm text-gray-600">평균 점수</div>
           </div>
         </div>
 
-        {/* 획득 배지 */}
+        {/* Recent Performance */}
         <div className="card">
-          <h3 className="text-lg font-bold mb-4">최근 획득 배지</h3>
+          <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+            <span>📈</span> 최근 성과
+          </h3>
           
-          <div className="flex gap-4 overflow-x-auto">
-            <div className="flex-shrink-0 text-center">
-              <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center text-2xl mb-1">
-                🔥
-              </div>
-              <div className="text-xs">연속 7일</div>
+          {/* Score Chart */}
+          <div className="bg-gray-50 rounded-2xl p-4">
+            <div className="flex items-end justify-between h-24 gap-2">
+              {recentScores.map((score, index) => (
+                <div key={index} className="flex-1 relative group">
+                  <div
+                    className="bg-gradient-to-t from-primary-500 to-primary-400 rounded-t-lg transition-all duration-300 hover:from-primary-600 hover:to-primary-500"
+                    style={{ height: `${(score / 100) * 100}%` }}
+                  >
+                    <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs px-2 py-1 rounded">
+                      {score}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="flex-shrink-0 text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-2xl mb-1">
-                🎖️
-              </div>
-              <div className="text-xs">자료구조 입문</div>
+            <div className="text-xs text-gray-500 text-center mt-3">최근 5개 문제</div>
+          </div>
+        </div>
+
+        {/* Recent Achievements */}
+        <div className="card">
+          <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+            <span>🏆</span> 최근 성취
+          </h3>
+          
+          <div className="flex gap-3 overflow-x-auto pb-2">
+            <div className="achievement-card from-yellow-100 to-orange-100 min-w-[100px]">
+              <div className="text-4xl mb-2">🔥</div>
+              <div className="text-xs font-medium text-gray-700">7일 연속</div>
+              <div className="text-xs text-gray-500">학습 달성</div>
             </div>
-            <div className="flex-shrink-0 text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-2xl mb-1">
-                🌟
-              </div>
-              <div className="text-xs">첫 만점</div>
+            <div className="achievement-card from-purple-100 to-pink-100 min-w-[100px]">
+              <div className="text-4xl mb-2">🎯</div>
+              <div className="text-xs font-medium text-gray-700">자료구조</div>
+              <div className="text-xs text-gray-500">마스터</div>
+            </div>
+            <div className="achievement-card from-green-100 to-emerald-100 min-w-[100px]">
+              <div className="text-4xl mb-2">💯</div>
+              <div className="text-xs font-medium text-gray-700">첫 만점</div>
+              <div className="text-xs text-gray-500">달성</div>
+            </div>
+            <div className="achievement-card from-blue-100 to-cyan-100 min-w-[100px]">
+              <div className="text-4xl mb-2">🚀</div>
+              <div className="text-xs font-medium text-gray-700">빠른 학습</div>
+              <div className="text-xs text-gray-500">10분 내</div>
             </div>
           </div>
         </div>

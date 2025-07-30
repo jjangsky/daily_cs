@@ -10,9 +10,10 @@ export const Challenge: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState(24 * 60 * 60) // 24시간 in seconds
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showHint, setShowHint] = useState(false)
+  const [isSaved, setIsSaved] = useState(false)
 
   useEffect(() => {
-    // TODO: API에서 오늘의 문제 가져오기
+    // 정적 더미 데이터
     setChallenge({
       id: '1',
       date: new Date(),
@@ -41,8 +42,7 @@ export const Challenge: React.FC = () => {
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    const secs = seconds % 60
-    return `${hours}시간 ${minutes}분 ${secs}초`
+    return `${hours}시간 ${minutes}분`
   }
 
   const handleSubmit = async () => {
@@ -53,9 +53,9 @@ export const Challenge: React.FC = () => {
 
     setIsSubmitting(true)
     try {
-      // TODO: API로 답변 제출
-      await new Promise(resolve => setTimeout(resolve, 1000)) // 임시 딜레이
-      navigate('/feedback')
+      // 제출 시뮬레이션
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      navigate('/dashboard')
     } catch (error) {
       alert('제출에 실패했습니다. 다시 시도해주세요.')
     } finally {
@@ -63,7 +63,12 @@ export const Challenge: React.FC = () => {
     }
   }
 
-  const categoryKorean = {
+  const handleSave = () => {
+    setIsSaved(true)
+    setTimeout(() => setIsSaved(false), 2000)
+  }
+
+  const categoryKorean: Record<string, string> = {
     DATA_STRUCTURES: '자료구조',
     ALGORITHMS: '알고리즘',
     OPERATING_SYSTEMS: '운영체제',
@@ -72,66 +77,88 @@ export const Challenge: React.FC = () => {
     SYSTEM_DESIGN: '시스템 설계'
   }
 
-  const difficultyStars = {
-    EASY: '⭐',
-    MEDIUM: '⭐⭐',
-    HARD: '⭐⭐⭐'
+  const difficultyKorean: Record<string, string> = {
+    EASY: '쉬움',
+    MEDIUM: '보통',
+    HARD: '어려움'
   }
 
   return (
-    <MobileLayout title="오늘의 문제">
-      <div className="mobile-container py-6">
-        {/* 시간 및 카테고리 정보 */}
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-6">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-yellow-800">남은 시간</span>
-            <span className="text-sm font-bold text-yellow-800">{formatTime(timeLeft)}</span>
+    <MobileLayout title="오늘의 도전">
+      <div className="mobile-container py-6 space-y-6">
+        {/* Timer Card */}
+        <div className="card-gradient relative overflow-hidden">
+          <div className="absolute -top-8 -right-8 w-24 h-24 bg-accent-300/20 rounded-full blur-2xl" />
+          <div className="relative z-10 flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">남은 시간</p>
+              <p className="text-2xl font-bold text-gray-900">{formatTime(timeLeft)}</p>
+            </div>
+            <div className="text-4xl">⏰</div>
           </div>
         </div>
 
-        {/* 문제 정보 */}
-        <div className="card mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm bg-primary-100 text-primary-700 px-2 py-1 rounded">
-              {categoryKorean[challenge?.category || 'DATA_STRUCTURES']}
-            </span>
-            <span className="text-sm text-gray-600">
-              난이도: {difficultyStars[challenge?.difficulty || 'MEDIUM']}
+        {/* Problem Card */}
+        <div className="card space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="badge badge-primary">
+                {categoryKorean[challenge?.category || 'DATA_STRUCTURES']}
+              </span>
+              <span className={`badge ${
+                challenge?.difficulty === 'EASY' ? 'badge-success' :
+                challenge?.difficulty === 'HARD' ? 'bg-red-100 text-red-700' :
+                'badge-accent'
+              }`}>
+                {difficultyKorean[challenge?.difficulty || 'MEDIUM']}
+              </span>
+            </div>
+            <span className="text-sm text-gray-500">
+              {new Date().toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' })}
             </span>
           </div>
 
-          <h2 className="text-xl font-bold text-gray-900 mb-3">
-            {challenge?.title}
-          </h2>
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">
+              {challenge?.title}
+            </h2>
+            <p className="text-gray-700 leading-relaxed">
+              {challenge?.description}
+            </p>
+          </div>
 
-          <p className="text-gray-700 leading-relaxed mb-4">
-            {challenge?.description}
-          </p>
-
-          {/* 힌트 */}
+          {/* Hint Button */}
           <button
             onClick={() => setShowHint(!showHint)}
-            className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+            className="inline-flex items-center gap-2 text-sm font-medium text-primary-600 hover:text-primary-700"
           >
-            {showHint ? '힌트 숨기기' : '힌트 보기'} 💡
+            <span className="text-lg">💡</span>
+            {showHint ? '힌트 숨기기' : '힌트 보기'}
           </button>
 
           {showHint && (
-            <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-              <ul className="space-y-1">
-                {challenge?.hints.map((hint, index) => (
-                  <li key={index} className="text-sm text-blue-800">
-                    • {hint}
-                  </li>
-                ))}
-              </ul>
+            <div className="bg-primary-50 rounded-2xl p-4 space-y-2">
+              {challenge?.hints.map((hint, index) => (
+                <p key={index} className="text-sm text-primary-700 flex items-start gap-2">
+                  <span className="text-primary-500 mt-0.5">•</span>
+                  <span>{hint}</span>
+                </p>
+              ))}
             </div>
           )}
         </div>
 
-        {/* 답변 작성 영역 */}
-        <div className="card mb-6">
-          <h3 className="font-medium text-gray-900 mb-3">답변 작성</h3>
+        {/* Answer Section */}
+        <div className="card space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-gray-900">나의 답변</h3>
+            <button 
+              onClick={handleSave}
+              className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+            >
+              {isSaved ? '✓ 저장됨' : '임시 저장'}
+            </button>
+          </div>
           
           <textarea
             value={answer}
@@ -139,45 +166,46 @@ export const Challenge: React.FC = () => {
             placeholder="여기에 답변을 작성해주세요...
 
 마크다운 문법을 사용할 수 있습니다.
-- **굵은 글씨**
-- *기울임*
-- `코드`
-- ```코드 블록```"
-            className="w-full h-64 px-4 py-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+• **굵은 글씨**로 강조
+• *기울임*으로 표현
+• `코드`로 감싸기
+• ```로 코드 블록 만들기"
+            className="w-full h-64 px-4 py-3.5 bg-white/60 backdrop-blur border border-gray-200 rounded-2xl resize-none 
+                     focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400 focus:bg-white
+                     placeholder-gray-400 transition-all duration-200"
             disabled={isSubmitting}
           />
 
-          <div className="flex items-center justify-between mt-3 text-sm text-gray-500">
-            <span>{answer.length}자</span>
-            <button className="text-primary-600 hover:text-primary-700">
-              임시 저장
-            </button>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-500">{answer.length}자 작성됨</span>
+            <div className="flex items-center gap-2">
+              {challenge?.relatedConcepts.map((concept, index) => (
+                <span
+                  key={index}
+                  className="badge bg-gray-100 text-gray-600 text-xs"
+                >
+                  #{concept}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* 관련 개념 */}
-        <div className="card mb-6">
-          <h3 className="font-medium text-gray-900 mb-3">관련 개념</h3>
-          <div className="flex flex-wrap gap-2">
-            {challenge?.relatedConcepts.map((concept, index) => (
-              <span
-                key={index}
-                className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-full"
-              >
-                {concept}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* 제출 버튼 */}
+        {/* Submit Button */}
         <button
           onClick={handleSubmit}
           disabled={isSubmitting || !answer.trim()}
-          className="btn-primary w-full"
+          className="btn-accent w-full"
         >
-          {isSubmitting ? '제출 중...' : '제출하기'}
+          {isSubmitting ? '제출 중...' : '답변 제출하기'}
         </button>
+
+        {/* Tips */}
+        <div className="bg-gray-100 rounded-2xl p-4 text-center">
+          <p className="text-sm text-gray-600">
+            💡 충분히 고민하고 작성해주세요. 제출 후에는 수정할 수 없습니다.
+          </p>
+        </div>
       </div>
     </MobileLayout>
   )
