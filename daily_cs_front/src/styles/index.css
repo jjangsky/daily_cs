@@ -1,28 +1,54 @@
 @import "tailwindcss";
 
-/* Custom theme extension */
+/* Modern Educational Platform Theme */
 @theme {
-  --color-gray-50: #f9fafb;
-  --color-gray-100: #f3f4f6;
-  --color-gray-200: #e5e7eb;
-  --color-gray-300: #d1d5db;
-  --color-gray-400: #9ca3af;
-  --color-gray-500: #6b7280;
-  --color-gray-600: #4b5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #1f2937;
-  --color-gray-900: #111827;
+  /* Neutral palette - Warm grays for a friendly feel */
+  --color-gray-50: #fafaf9;
+  --color-gray-100: #f5f5f4;
+  --color-gray-200: #e7e5e4;
+  --color-gray-300: #d6d3d1;
+  --color-gray-400: #a8a29e;
+  --color-gray-500: #78716c;
+  --color-gray-600: #57534e;
+  --color-gray-700: #44403c;
+  --color-gray-800: #292524;
+  --color-gray-900: #1c1917;
   
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
+  /* Primary - Modern purple for education */
+  --color-primary-50: #faf5ff;
+  --color-primary-100: #f3e8ff;
+  --color-primary-200: #e9d5ff;
+  --color-primary-300: #d8b4fe;
+  --color-primary-400: #c084fc;
+  --color-primary-500: #a855f7;
+  --color-primary-600: #9333ea;
+  --color-primary-700: #7c3aed;
+  --color-primary-800: #6b21a8;
+  --color-primary-900: #581c87;
+  
+  /* Accent - Energetic orange for achievements */
+  --color-accent-50: #fff7ed;
+  --color-accent-100: #ffedd5;
+  --color-accent-200: #fed7aa;
+  --color-accent-300: #fdba74;
+  --color-accent-400: #fb923c;
+  --color-accent-500: #f97316;
+  --color-accent-600: #ea580c;
+  --color-accent-700: #c2410c;
+  --color-accent-800: #9a3412;
+  --color-accent-900: #7c2d12;
+  
+  /* Success - Fresh green */
+  --color-success-50: #f0fdf4;
+  --color-success-100: #dcfce7;
+  --color-success-200: #bbf7d0;
+  --color-success-300: #86efac;
+  --color-success-400: #4ade80;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+  --color-success-700: #15803d;
+  --color-success-800: #166534;
+  --color-success-900: #14532d;
 }
 
 @layer base {
@@ -34,9 +60,17 @@
   }
 
   body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-gray-50 text-gray-800;
     overscroll-behavior-y: none;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
+  
+  /* Typography */
+  h1 { @apply text-3xl font-bold text-gray-900; }
+  h2 { @apply text-2xl font-bold text-gray-900; }
+  h3 { @apply text-xl font-semibold text-gray-800; }
+  h4 { @apply text-lg font-semibold text-gray-800; }
+  p { @apply text-base text-gray-700; }
 }
 
 @layer utilities {
@@ -55,31 +89,89 @@
     @apply w-full max-w-sm mx-auto px-4;
   }
 
+  /* Modern button styles */
   .btn-primary {
-    @apply bg-primary-600 text-white rounded-lg px-4 py-3 font-medium 
-           active:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed
-           transition-colors duration-150;
+    @apply bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-2xl px-6 py-3.5 font-semibold 
+           shadow-lg shadow-primary-500/25 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed
+           transition-all duration-200 hover:shadow-xl hover:shadow-primary-500/30;
   }
 
   .btn-secondary {
-    @apply bg-gray-200 text-gray-900 rounded-lg px-4 py-3 font-medium
-           active:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed
-           transition-colors duration-150;
+    @apply bg-white text-gray-700 rounded-2xl px-6 py-3.5 font-semibold border border-gray-200
+           shadow-sm active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed
+           transition-all duration-200 hover:shadow-md hover:border-gray-300;
+  }
+  
+  .btn-accent {
+    @apply bg-gradient-to-r from-accent-500 to-accent-600 text-white rounded-2xl px-6 py-3.5 font-semibold 
+           shadow-lg shadow-accent-500/25 active:scale-95
+           transition-all duration-200;
   }
 
+  /* Modern input styles */
   .input-field {
-    @apply w-full px-4 py-3 bg-white border border-gray-300 rounded-lg
-           focus:ring-2 focus:ring-primary-500 focus:border-transparent
-           placeholder-gray-400;
+    @apply w-full px-4 py-3.5 bg-white/60 backdrop-blur border border-gray-200 rounded-2xl
+           focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400 focus:bg-white
+           placeholder-gray-400 transition-all duration-200;
   }
 
+  /* Modern navigation */
   .bottom-nav {
-    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200
-           flex justify-around items-center h-16;
+    @apply fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-gray-100
+           flex justify-around items-center h-20 shadow-lg;
     padding-bottom: env(safe-area-inset-bottom);
   }
+  
+  .nav-item {
+    @apply flex flex-col items-center gap-1 p-2 rounded-2xl transition-all duration-200
+           text-gray-500 hover:text-primary-600 hover:bg-primary-50;
+  }
+  
+  .nav-item.active {
+    @apply text-primary-600 bg-primary-50;
+  }
 
+  /* Modern card styles */
   .card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-100 p-4;
+    @apply bg-white rounded-3xl shadow-sm border border-gray-100 p-6
+           transition-all duration-200 hover:shadow-md;
+  }
+  
+  .card-gradient {
+    @apply bg-gradient-to-br from-primary-50 to-accent-50 rounded-3xl p-6
+           border border-primary-100/50;
+  }
+  
+  /* Badge styles */
+  .badge {
+    @apply inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold;
+  }
+  
+  .badge-primary {
+    @apply bg-primary-100 text-primary-700;
+  }
+  
+  .badge-accent {
+    @apply bg-accent-100 text-accent-700;
+  }
+  
+  .badge-success {
+    @apply bg-success-100 text-success-700;
+  }
+  
+  /* Progress bar */
+  .progress-bar {
+    @apply w-full bg-gray-100 rounded-full h-2 overflow-hidden;
+  }
+  
+  .progress-fill {
+    @apply bg-gradient-to-r from-primary-500 to-primary-600 h-full rounded-full
+           transition-all duration-500 ease-out;
+  }
+  
+  /* Achievement card */
+  .achievement-card {
+    @apply flex flex-col items-center p-4 rounded-2xl bg-gradient-to-br
+           transition-all duration-200 hover:scale-105;
   }
 }
