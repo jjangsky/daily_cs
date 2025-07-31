@@ -1,3 +1,11 @@
+val springAiVersion = "1.0.1"
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.ai:spring-ai-bom:$springAiVersion")
+    }
+}
+
 plugins {
     java
     id("org.springframework.boot") version "3.5.4"
@@ -35,6 +43,11 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // Spring AI dependencies
+    implementation("org.springframework.ai:spring-ai-client-chat")
+    implementation("org.springframework.ai:spring-ai-model")
+    implementation("org.springframework.ai:spring-ai-openai")
 }
 
 tasks.withType<Test> {
