@@ -83,3 +83,7 @@ yarn-error.log*
 
 # OS files
 Thumbs.db
+
+# Spring Boot application config
+application-local.yml
+**/application-local.yml
