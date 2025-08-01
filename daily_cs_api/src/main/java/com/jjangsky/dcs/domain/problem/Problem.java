@@ -27,8 +27,8 @@ public class Problem extends AbstractEntity {
     @Column(columnDefinition = "TEXT")
     private String hint;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Tag tag;
 
     @Column(nullable = false)

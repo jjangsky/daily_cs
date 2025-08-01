@@ -14,4 +14,9 @@ public enum Level {
         this.description = description;
     }
 
+    public static Level randomLevel() {
+        Level[] levels = Level.values();
+        int randomIndex = (int) (Math.random() * levels.length);
+        return levels[randomIndex];
+    }
 }
