@@ -32,8 +32,8 @@ public enum Tag {
         this.description = description;
     }
 
-    public static Tag getRandomCategory() {
+    public static String getRandomCategory() {
         Tag[] values = Tag.values();
-        return values[(int)(Math.random() * values.length)];
+        return values[(int)(Math.random() * values.length)].getDescription();
     }
 }

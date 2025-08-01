@@ -1,10 +1,3 @@
-val springAiVersion = "1.0.1"
-
-dependencyManagement {
-    imports {
-        mavenBom("org.springframework.ai:spring-ai-bom:$springAiVersion")
-    }
-}
 
 plugins {
     java
@@ -29,6 +22,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven("https://repo.spring.io/snapshot")
 }
 
 dependencies {
@@ -45,8 +39,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // Spring AI dependencies
-    implementation("org.springframework.ai:spring-ai-client-chat")
-    implementation("org.springframework.ai:spring-ai-model")
+    implementation(platform("org.springframework.ai:spring-ai-bom:1.0.0-SNAPSHOT"))
     implementation("org.springframework.ai:spring-ai-openai")
 }
 

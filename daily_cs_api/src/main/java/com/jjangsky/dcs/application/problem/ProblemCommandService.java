@@ -16,6 +16,11 @@ public class ProblemCommandService implements ProblemRegister {
     @Override
     public Problem register() {
 
-        return null;
+        // AI 를 사용한 문제 생성
+
+        // 문제 가공
+
+        // Problem 도메인 등록
+
     }
 }
